@@ -1,3 +1,6 @@
+
+import './button.styles.scss'
+
 //default, inverted, google sign in buttons
 
 const BUTTON_TYPE_CLASS = {
