@@ -6,7 +6,8 @@ import {
 
 import FormInput from "../form-input/form-input.component.jsx";
 import Button from "../button/button.components.jsx";
-import './sign-up-form.styles.scss'
+
+import "./sign-up-form.styles.scss";
 
 const SignUpForm = () => {
   const defaultFormField = {
@@ -18,8 +19,6 @@ const SignUpForm = () => {
   const [formField, setFormField] = useState(defaultFormField);
 
   const { displayName, email, password, confirmPassword } = formField;
-
-  console.log(formField);
 
   const resetFormFields = () => {
     setFormField(defaultFormField);
@@ -41,7 +40,7 @@ const SignUpForm = () => {
       );
 
       //check if it gets in the user document
-      const userDocRef = await createUserDocumentFromAuth(user, {
+      await createUserDocumentFromAuth(user, {
         displayName,
       });
       resetFormFields();
@@ -51,7 +50,6 @@ const SignUpForm = () => {
   };
 
   const handleChange = (event) => {
-    console.log(event);
     const { name, value } = event.target;
     setFormField({ ...formField, [name]: value });
   };
