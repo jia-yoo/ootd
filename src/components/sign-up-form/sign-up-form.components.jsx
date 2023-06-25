@@ -33,7 +33,7 @@ const SignUpForm = () => {
       return;
     }
     try {
-      //check if it gets authentificated
+      //check if it gets authenticated
       const { user } = await createAuthUserWithEmailAndPassword(
         email,
         password
