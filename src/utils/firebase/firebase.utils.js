@@ -9,7 +9,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc , collection, writeBatch, query, getDocs } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -71,4 +71,37 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 
 export const signOutUser = async () => await signOut(auth)
 
-export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth,callback)
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback)
+
+//adding collection and document in firestore db from json object (SHOP_OBJECT)
+export const addCollectionAndDocument = async (collectionKey, objectsToAdd) => { 
+ 
+  const collectionRef = collection(db, collectionKey);
+  const batch = writeBatch(db);
+ 
+  objectsToAdd.forEach((object) => {
+    const docRef = doc(collectionRef, object.title.toLowerCase());
+    batch.set(docRef, object);
+  });
+ 
+  await batch.commit();
+  console.log('done');
+ 
+}
+
+//retrieve the categories from the firebase and build out the documents inside all in one acceessible JSON object
+
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, 'categories');
+  const q = query(collectionRef);
+ 
+  const querySnapshot = await getDocs(q);
+  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => { 
+    const { title, items } = docSnapshot.data();
+    acc[title.toLowerCase()] = items;
+    return acc;
+  }, {})
+  return categoryMap;
+ 
+ 
+ }
