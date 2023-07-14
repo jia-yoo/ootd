@@ -1,15 +1,15 @@
 import { useState } from "react";
-import {
-  createAuthUserWithEmailAndPassword,
-  createUserDocumentFromAuth,
-} from "../../utils/firebase/firebase.utils.js";
 
 import FormInput from "../form-input/form-input.component.jsx";
 import Button from "../button/button.components.jsx";
 
-import "./sign-up-form.styles.scss";
+import { SignUpContainer } from "./sign-up-form.styles.jsx";
+
+import { signUpStart } from "../../store/user/user.action.js";
+import { useDispatch } from "react-redux";
 
 const SignUpForm = () => {
+  const dispatch = useDispatch();
   const defaultFormField = {
     displayName: "",
     email: "",
@@ -34,15 +34,7 @@ const SignUpForm = () => {
     }
     try {
       //check if it gets authenticated
-      const { user } = await createAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
-
-      //check if it gets in the user document
-      await createUserDocumentFromAuth(user, {
-        displayName,
-      });
+      dispatch(signUpStart(email, password, displayName));
       resetFormFields();
     } catch (err) {
       console.log(err);
@@ -55,7 +47,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="sign-up-container">
+   <SignUpContainer>
       <h2>Don't have an account?</h2>
       <span>Sign Up with your email and password</span>
       <form onSubmit={handleSubmit}>
@@ -96,7 +88,7 @@ const SignUpForm = () => {
         />
         <Button type="submit">Submit</Button>
       </form>
-    </div>
+   </SignUpContainer>
   );
 };
 export default SignUpForm;

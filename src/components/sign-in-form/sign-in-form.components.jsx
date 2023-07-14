@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch } from 'react-redux'
 import {
   signInWithGooglePopup,
   signInAuthUserWithEmailAndPassword,
@@ -6,9 +7,12 @@ import {
 
 import FormInput from "../form-input/form-input.component.jsx";
 import Button, { BUTTON_TYPE_CLASS } from "../button/button.components.jsx";
-import { SignInContainer, ButtonsContainer} from "./sign-in-form.styles.jsx"; 
+import { SignInContainer, ButtonsContainer } from "./sign-in-form.styles.jsx"; 
+
+import { googleSignInStart,emailSignInStart } from "../../store/user/user.action.js";
 
 const SignInForm = () => {
+  const dispatch = useDispatch()
   const defaultFormField = {
     email: "",
     password: "",
@@ -21,14 +25,14 @@ const SignInForm = () => {
   };
 
   const signInWithGoogle = async () => {
-    await signInWithGooglePopup();
+  dispatch(googleSignInStart())
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      await signInAuthUserWithEmailAndPassword(email, password);
+      dispatch(emailSignInStart(email, password));
 
       resetFormFields();
     } catch (err) {

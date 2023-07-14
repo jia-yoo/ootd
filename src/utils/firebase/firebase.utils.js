@@ -58,6 +58,7 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInformation
       console.log(err.message);
     }
   }
+  return userSnapshot;
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => { 
@@ -71,7 +72,15 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 
 export const signOutUser = async () => await signOut(auth)
 
-export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback)
+
+
+//making onAuthStatechanged to promise based method
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(auth, (userAuth) => { unsubscribe(); resolve(userAuth) }, reject)
+   })
+  };
+
 
 //adding collection and document in firestore db from json object (SHOP_OBJECT)
 export const addCollectionAndDocument = async (collectionKey, objectsToAdd) => { 
@@ -98,8 +107,5 @@ export const getCategoriesAndDocuments = async () => {
   const querySnapshot = await getDocs(q);
 
   return querySnapshot.docs.map(docSnapshot => docSnapshot.data())
-    
-    
+}
  
- 
- }
